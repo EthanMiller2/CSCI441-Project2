@@ -88,31 +88,31 @@ public:
     }
 };
 
-std::vector<AABB> boundingBoxes;
-std::vector<AABB> boundingBoxes1;
-std::vector<AABB> boundingBoxes2;
+// std::vector<AABB> boundingBoxes;
+// std::vector<AABB> boundingBoxes1;
+// std::vector<AABB> boundingBoxes2;
 
 
-class MySlickIntersector : public Intersector {
-public:
-    Hit find_first_intersection(const World& world, const Ray& ray) {
-        Hit hit(ray);
-        for(auto box: boundingBoxes2){
-            if(box.intersect(ray)){
-                for (auto surface : world.shapes()) {
-                    double cur_t = surface->intersect(ray);
+// class MySlickIntersector : public Intersector {
+// public:
+//     Hit find_first_intersection(const World& world, const Ray& ray) {
+//         Hit hit(ray);
+//         for(auto box: boundingBoxes2){
+//             if(box.intersect(ray)){
+//                 for (auto surface : world.shapes()) {
+//                     double cur_t = surface->intersect(ray);
 
-                    if (cur_t < hit.t()) {
-                        hit.update(surface, cur_t);
-                    }
-                }
+//                     if (cur_t < hit.t()) {
+//                         hit.update(surface, cur_t);
+//                     }
+//                 }
 
-            }
+//             }
 
-        }
-        return hit;
-    }
-};
+//         }
+//         return hit;
+//     }
+// };
 
 
 
@@ -130,38 +130,33 @@ glm::vec3 rand_color() {
 }
 
 
-std::vector<Triangle> random_box() {
-    float  x = (rand_val() * 8) - 4;
-    float  y = (rand_val() * 8) - 4;
-    float  z = rand_val() * 5;
-    float scale = rand_val() * 2;
+// std::vector<Triangle> random_box() {
+//     float  x = (rand_val() * 8) - 4;
+//     float  y = (rand_val() * 8) - 4;
+//     float  z = rand_val() * 5;
+//     float scale = rand_val() * 2;
 
-    float minX = x  + scale * -0.5;
-    float maxX = x  + scale * 0.5;
-    float minY = y  + scale * -0.5;
-    float maxY = y  + scale * 0.5;
+//     float minX = x  + scale * -0.5;
+//     float maxX = x  + scale * 0.5;
+//     float minY = y  + scale * -0.5;
+//     float maxY = y  + scale * 0.5;
 
-    AABB box = AABB(minX, maxX, minY, maxY);
-    boundingBoxes2.push_back(box);
+//     return Obj::make_box(glm::vec3(x, y, z), scale, rand_color());
+// }
 
+// float getMax(float a, float b, float c){
+//     // std::cout << a << ":" << b << ":" << c << std::endl;
+//     // std::cout << "Max: " << fmax(fmax(a,b),c) << std::endl;
+//     return(fmax(fmax(a,b),c));
 
+// }
 
-    return Obj::make_box(glm::vec3(x, y, z), scale, rand_color());
-}
+// float getMin(float a, float b, float c){
+//     // std::cout << a << ":" << b << ":" << c << std::endl;
+//     // std::cout << "Min: " << fmin(fmin(a,b),c) << std::endl;
+//     return(fmin(fmin(a,b),c));
 
-float getMax(float a, float b, float c){
-    // std::cout << a << ":" << b << ":" << c << std::endl;
-    // std::cout << "Max: " << fmax(fmax(a,b),c) << std::endl;
-    return(fmax(fmax(a,b),c));
-
-}
-
-float getMin(float a, float b, float c){
-    // std::cout << a << ":" << b << ":" << c << std::endl;
-    // std::cout << "Min: " << fmin(fmin(a,b),c) << std::endl;
-    return(fmin(fmin(a,b),c));
-
-}
+// }
 
  
 
@@ -171,10 +166,12 @@ int main(int argc, char** argv) {
     
 
     // set the number of boxes
-    int NUM_BOXES = 4;
+    // int NUM_BOXES = 4;
 
     // create an image 640 pixels wide by 480 pixels tall
-    bitmap_image image(640, 480);
+    bitmap_image image(1280, 960);
+    bitmap_image image2(320, 240);
+    bitmap_image image3(320, 240);
 
     // setup the camera
     float dist_to_origin = 5;
@@ -219,61 +216,131 @@ int main(int argc, char** argv) {
 
 
     //Bounding boxes around spheres for full box hierarchical bounding boxes
-    world.append(Sphere(glm::vec3(1, 1, 1), 1, rand_color()));
-    AABB sphere1 = AABB((1 - 1), (1+1), (1-1), (1+1));
-    boundingBoxes2.push_back(sphere1);
-    world.append(Sphere(glm::vec3(2, 2, 4), 2, rand_color()));
-    AABB sphere2 = AABB((2 - 2), (2+2), (2-2), (2+2));
-    boundingBoxes2.push_back(sphere2);
-    world.append(Sphere(glm::vec3(3, 3, 6), 3, rand_color()));
-    AABB sphere3 = AABB((3 - 3), (3+3), (3-3), (3+3));
-    boundingBoxes2.push_back(sphere3);
+    world.append(Sphere(glm::vec3(0, 0, 4), 4, rand_color()));
+    // AABB sphere1 = AABB((1 - 1), (1+1), (1-1), (1+1));
+    // boundingBoxes2.push_back(sphere1);
+    // world.append(Sphere(glm::vec3(2, 2, 4), 2, rand_color()));
+    // AABB sphere2 = AABB((2 - 2), (2+2), (2-2), (2+2));
+    // boundingBoxes2.push_back(sphere2);
+    // world.append(Sphere(glm::vec3(3, 3, 6), 3, rand_color()));
+    // AABB sphere3 = AABB((3 - 3), (3+3), (3-3), (3+3));
+    // boundingBoxes2.push_back(sphere3);
 
 
-    //Bounding boxes for uniform space partinioning
-    AABB hardCode1 = AABB(0, 160, 0, 480);
-    boundingBoxes1.push_back(hardCode1);
+    // //Bounding boxes for uniform space partinioning
+    // AABB hardCode1 = AABB(0, 160, 0, 480);
+    // boundingBoxes1.push_back(hardCode1);
 
-    AABB hardCode2 = AABB(160, 320, 0, 480);
-    boundingBoxes1.push_back(hardCode2);
+    // AABB hardCode2 = AABB(160, 320, 0, 480);
+    // boundingBoxes1.push_back(hardCode2);
 
-    AABB hardCode3 = AABB(320, 480, 0, 480);
-    boundingBoxes1.push_back(hardCode3);
+    // AABB hardCode3 = AABB(320, 480, 0, 480);
+    // boundingBoxes1.push_back(hardCode3);
 
-    AABB hardCode4 = AABB(480, 640, 0, 480);
-    boundingBoxes1.push_back(hardCode4);
+    // AABB hardCode4 = AABB(480, 640, 0, 480);
+    // boundingBoxes1.push_back(hardCode4);
 
-    // and add some boxes and prep world for rendering
-    for (int i = 0 ; i < NUM_BOXES ; ++i) {
-        std::vector<Triangle> cube = random_box();
-        for(auto t : cube){
-            float minX = getMin(t.getA().x, t.getB().x, t.getC().x);
-            float maxX = getMax(t.getA().x, t.getB().x, t.getC().x);
-            float minY = getMin(t.getA().y, t.getB().y, t.getC().y);
-            float maxY = getMax(t.getA().y, t.getB().y, t.getC().y);
-            AABB box = AABB(minX, maxX, minY, maxY);
-            boundingBoxes.push_back(box);
-        }
+    // // and add some boxes and prep world for rendering
+    // for (int i = 0 ; i < NUM_BOXES ; ++i) {
+    //     std::vector<Triangle> cube = random_box();
+    //     for(auto t : cube){
+    //         float minX = getMin(t.getA().x, t.getB().x, t.getC().x);
+    //         float maxX = getMax(t.getA().x, t.getB().x, t.getC().x);
+    //         float minY = getMin(t.getA().y, t.getB().y, t.getC().y);
+    //         float maxY = getMax(t.getA().y, t.getB().y, t.getC().y);
+    //         AABB box = AABB(minX, maxX, minY, maxY);
+    //         boundingBoxes.push_back(box);
+    //     }
 
-        world.append(cube);
-    }
+    //     world.append(cube);
+    // }
+
+
+    // std::vector<Triangle> cube1 = Obj::make_box(glm::vec3(3, 3, 3), 3, rand_color());
+    // std::vector<Triangle> cube2 = Obj::make_box(glm::vec3(-3, 3, 3), 3, rand_color());
+    // world.append(cube1);
+    // world.append(cube2);
     world.lock();
 
     // create the intersector
     BruteForceIntersector intersector;
 
-    MySlickIntersector intersector1;
+    // MySlickIntersector intersector1;
+
 
     // and setup the renderer
-    Renderer renderer(&intersector1);
+    Renderer renderer(&intersector);
 
     // render
     Timer timer;
     timer.start();
     renderer.render(image, camera, lights, world);
+    renderer.render(image3, camera, lights, world);
     timer.stop();
 
+    // bitmap_image image("ray-traced.bmp");
+
     image.save_image("ray-traced.bmp");
+    image3.save_image("non_aliased.bmp");
+
+    int image2i= 0;
+    int image2j = 0;
+
+    const unsigned int height = image.height();
+     const unsigned int width = image.width();
+
+    for(std::size_t i = 0; i < height - 2; i+=2){
+        image2j = 0;
+        
+        for(std::size_t j = 0; j < width - 2; j+=2){
+
+
+
+            // std::cout << "Image1: " << i << " : " << j <<  std::endl;
+            // std::cout << "Image2: " << image2i / 2 << " : " << image2j / 2 << std::endl;
+
+            
+
+            rgb_t colour1;
+            rgb_t colour2;
+            rgb_t colour3;
+            rgb_t colour4;
+
+            image.get_pixel(j, i,colour1);
+            int red1 = colour1.red;
+            int green1 = colour1.green;
+            int blue1 = colour1.blue;
+
+            image.get_pixel(j + 1, i,colour2);
+            int red2 = colour2.red;
+            int green2 = colour2.green;
+            int blue2 = colour2.blue;
+
+            image.get_pixel(j, i + 1,colour3);
+            int red3 = colour3.red;
+            int green3 = colour3.green;
+            int blue3 = colour3.blue;
+
+            image.get_pixel(j + 1, i + 1,colour4);
+            int red4 = colour4.red;
+            int green4 = colour4.green;
+            int blue4 = colour4.blue;
+
+            int newRed = (red1 + red2 + red3 + red4) / 4;
+            int newGreen = (green1 + green2 + green3 + green4) / 4;
+            int newBlue = (blue1 + blue2 + blue3 + blue4) / 4;
+
+            rgb_t newColour = make_colour(newRed, newGreen, newBlue);
+
+            image2.set_pixel(image2j / 2, image2i / 2, newColour);
+            image2j +=1;
+        }
+        image2i +=1;
+    }
+
+
+
+    image2.save_image("ray_traced2.bmp");
     std::cout << "Rendered in " <<  timer.total() << " milliseconds" << std::endl;
 }
 

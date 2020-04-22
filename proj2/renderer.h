@@ -29,6 +29,7 @@ class Renderer {
 
         glm::vec3 pos = hit.position();
         glm::vec3 normal = hit.normal();
+        
 
         glm::vec3 light_dir = glm::normalize(light->direction(pos));
 
