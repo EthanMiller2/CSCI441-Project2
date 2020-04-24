@@ -281,7 +281,7 @@ int main(int argc, char** argv) {
     // bitmap_image image("ray-traced.bmp");
 
     image.save_image("ray-traced.bmp");
-    image3.save_image("non_aliased.bmp");
+    image3.save_image("non-aliased.bmp");
 
     int image2i= 0;
     int image2j = 0;
@@ -340,7 +340,7 @@ int main(int argc, char** argv) {
 
 
 
-    image2.save_image("ray_traced2.bmp");
+    image2.save_image("anti-alias-image.bmp");
     std::cout << "Rendered in " <<  timer.total() << " milliseconds" << std::endl;
 }
 
