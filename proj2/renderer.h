@@ -7,7 +7,32 @@
 #include "ray.h"
 #include "intersector.h"
 
+
+
+
+void *PrintHello(void *threadarg) {
+   struct thread_data *my_data;
+   my_data = (struct thread_data *) threadarg;
+
+//    std::cout << "Thread ID : " << my_data->thread_id ;
+//    std::cout << " Message : " << my_data->message << std::endl;
+    // for (int y = 0; y < my_data->image.height(); ++y) {
+    //         for (int x = 0; x < my_data->image.width(); ++x) {
+    //             Ray ray = my_data->camera.make_ray(my_data->image.width(), my_data->image.height(), x, y);
+    //             glm::vec3 c = render_pixel(my_data->camera, my_data->lights, my_data->world, ray);
+    //             image.set_pixel(x, image.height()-y-1, to_color(c));
+    //         }
+    //     }
+
+
+   pthread_exit(NULL);
+}
+
+
+
 class Renderer {
+    
+    
 
     Intersector* _intersector;
 
@@ -68,29 +93,114 @@ class Renderer {
         const World& world,
         const Ray& ray
     ) {
-
         Hit hit = _intersector->find_first_intersection(world, ray);
         return shade(camera, lights, hit);
     }
 
+    
 public:
+    int number; 
+    bitmap_image& imageG;
+    Camera& cameraG;
+    Lights& lightsG;
+    World& worldG;
 
-    Renderer(Intersector* intersector) : _intersector(intersector) { }
-
-    void render(
-        bitmap_image &image,
-        const Camera& camera,
-        const Lights& lights,
-        const World& world
-    ) {
-        for (int y = 0; y < image.height(); ++y) {
-            for (int x = 0; x < image.width(); ++x) {
-                Ray ray = camera.make_ray(image.width(), image.height(), x, y);
-                glm::vec3 c = render_pixel(camera, lights, world, ray);
-                image.set_pixel(x, image.height()-y-1, to_color(c));
+    void *hello(void){
+        std::cout << "Hello, world!" << std::endl;
+        
+        if(number == 1){
+            for (int y = 0; y < imageG.height()/4; ++y) {
+                for (int x = 0; x < imageG.width(); ++x) {
+                    Ray ray = cameraG.make_ray(imageG.width(), imageG.height(), x, y);
+                    glm::vec3 c = render_pixel(cameraG, lightsG, worldG, ray);
+                    imageG.set_pixel(x, imageG.height()-y-1, to_color(c));
+                }
+            }
+        } else if(number == 2){
+            for (int y = imageG.height()/4; y < imageG.height()/4*2; ++y) {
+                for (int x = 0; x < imageG.width(); ++x) {
+                    Ray ray = cameraG.make_ray(imageG.width(), imageG.height(), x, y);
+                    glm::vec3 c = render_pixel(cameraG, lightsG, worldG, ray);
+                    imageG.set_pixel(x, imageG.height()-y-1, to_color(c));
+                }
+            }
+        } else if(number == 3){
+            for (int y = imageG.height()/4*2; y < imageG.height()/4*3; ++y) {
+                for (int x = 0; x < imageG.width(); ++x) {
+                     Ray ray = cameraG.make_ray(imageG.width(), imageG.height(), x, y);
+                    glm::vec3 c = render_pixel(cameraG, lightsG, worldG, ray);
+                    imageG.set_pixel(x, imageG.height()-y-1, to_color(c));
+                }
+            }
+        } else {
+            for (int y = imageG.height()/4*3; y < imageG.height(); ++y) {
+                for (int x = 0; x < imageG.width(); ++x) {
+                     Ray ray = cameraG.make_ray(imageG.width(), imageG.height(), x, y);
+                    glm::vec3 c = render_pixel(cameraG, lightsG, worldG, ray);
+                    imageG.set_pixel(x, imageG.height()-y-1, to_color(c));
+                }
             }
         }
+       
+        return 0;
     }
+
+    static void *hello_helper(void *context){
+        return ((Renderer *)context)->hello();
+    }
+
+
+    void *hello1(void){
+        std::cout << "Hello, world!" << std::endl;
+        
+        if(number == 1){
+            for (int y = 0; y < imageG.height()/4; ++y) {
+                for (int x = 0; x < imageG.width(); ++x) {
+                    Ray ray = cameraG.make_ray(imageG.width(), imageG.height(), x, y);
+                    glm::vec3 c = render_pixel(cameraG, lightsG, worldG, ray);
+                    imageG.set_pixel(x, imageG.height()-y-1, to_color(c));
+                }
+            }
+        } else if(number == 2){
+            for (int y = imageG.height()/4; y < imageG.height()/4*2; ++y) {
+                for (int x = 0; x < imageG.width(); ++x) {
+                    Ray ray = cameraG.make_ray(imageG.width(), imageG.height(), x, y);
+                    glm::vec3 c = render_pixel(cameraG, lightsG, worldG, ray);
+                    imageG.set_pixel(x, imageG.height()-y-1, to_color(c));
+                }
+            }
+        } else if(number == 3){
+            for (int y = imageG.height()/4*2; y < imageG.height()/4*3; ++y) {
+                for (int x = 0; x < imageG.width(); ++x) {
+                     Ray ray = cameraG.make_ray(imageG.width(), imageG.height(), x, y);
+                    glm::vec3 c = render_pixel(cameraG, lightsG, worldG, ray);
+                    imageG.set_pixel(x, imageG.height()-y-1, to_color(c));
+                }
+            }
+        } else {
+            for (int y = imageG.height()/4*3; y < imageG.height(); ++y) {
+                for (int x = 0; x < imageG.width(); ++x) {
+                     Ray ray = cameraG.make_ray(imageG.width(), imageG.height(), x, y);
+                    glm::vec3 c = render_pixel(cameraG, lightsG, worldG, ray);
+                    imageG.set_pixel(x, imageG.height()-y-1, to_color(c));
+                }
+            }
+        }
+       
+        return 0;
+    }
+
+    static void *hello_helper1(void *context){
+        return ((Renderer *)context)->hello1();
+    }
+
+    Renderer(
+        Intersector* intersector,  
+        bitmap_image& image,
+        Camera& camera,
+        Lights& lights,
+        World& world,
+        int num) : _intersector(intersector), imageG(image), cameraG(camera), lightsG(lights), worldG(world), number(num) { }
 };
 
 #endif
