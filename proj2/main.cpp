@@ -13,12 +13,6 @@
 #include "shape.h"
 #include "timer.h"
 
-
-
-
-
-
-
 class AABB
 { 
 private:
@@ -33,16 +27,9 @@ public:
         maxX = b;
         minY = c;
         maxY = d;
-
-
-
     } 
 
     bool intersect(const Ray &r){
-
-
-
-
         float tmin = (minX - r.origin.x) / r.direction.x; 
         float tmax = (maxX - r.origin.x) / r.direction.x; 
  
@@ -61,16 +48,11 @@ public:
  
         if (tymax < tmax) 
             tmax = tymax; 
- 
-       
- 
-    return true; 
- 
 
+        return true; 
     } 
        
 }; 
-
 
 class BruteForceIntersector : public Intersector {
 public:
@@ -130,19 +112,19 @@ glm::vec3 rand_color() {
 }
 
 
-// std::vector<Triangle> random_box() {
-//     float  x = (rand_val() * 8) - 4;
-//     float  y = (rand_val() * 8) - 4;
-//     float  z = rand_val() * 5;
-//     float scale = rand_val() * 2;
+std::vector<Triangle> random_box() {
+    float  x = (rand_val() * 8) - 4;
+    float  y = (rand_val() * 8) - 4;
+    float  z = rand_val() * 5;
+    float scale = rand_val() * 2;
 
-//     float minX = x  + scale * -0.5;
-//     float maxX = x  + scale * 0.5;
-//     float minY = y  + scale * -0.5;
-//     float maxY = y  + scale * 0.5;
+    float minX = x  + scale * -0.5;
+    float maxX = x  + scale * 0.5;
+    float minY = y  + scale * -0.5;
+    float maxY = y  + scale * 0.5;
 
-//     return Obj::make_box(glm::vec3(x, y, z), scale, rand_color());
-// }
+    return Obj::make_box(glm::vec3(x, y, z), scale, rand_color());
+}
 
 // float getMax(float a, float b, float c){
 //     // std::cout << a << ":" << b << ":" << c << std::endl;
@@ -158,20 +140,28 @@ glm::vec3 rand_color() {
 
 // }
 
- 
 
 
+struct thread_data {
+   int  thread_id;
+   char *message;
+};
 
 int main(int argc, char** argv) {
     
 
     // set the number of boxes
-    // int NUM_BOXES = 4;
+    int NUM_BOXES = 4;
 
     // create an image 640 pixels wide by 480 pixels tall
-    bitmap_image image(1280, 960);
-    bitmap_image image2(320, 240);
-    bitmap_image image3(320, 240);
+    int imageWidth = 320;
+    int imageHeight = 240;
+    // int imageWidth = 640;
+    // int imageHeight = 480;
+
+    bitmap_image image(imageWidth*4, imageHeight*4);
+    bitmap_image image2(imageWidth, imageHeight);
+    bitmap_image image3(imageWidth, imageHeight);
 
     // setup the camera
     float dist_to_origin = 5;
@@ -203,20 +193,36 @@ int main(int argc, char** argv) {
 
 
     //Bounding boxes around spheres for triangle hierarchical bounding boxes and the spheres
-    // world.append(Sphere(glm::vec3(1, 1, 1), 1, rand_color()));
+    world.append(Sphere(glm::vec3(1, 1, 1), 1, rand_color()));
     // AABB sphere1 = AABB((1 - 1), (1+1), (1-1), (1+1));
     // boundingBoxes.push_back(sphere1);
-    // world.append(Sphere(glm::vec3(2, 2, 4), 2, rand_color()));
+    world.append(Sphere(glm::vec3(2, 2, 4), 2, rand_color()));
     // AABB sphere2 = AABB((2 - 2), (2+2), (2-2), (2+2));
     // boundingBoxes.push_back(sphere2);
-    // world.append(Sphere(glm::vec3(3, 3, 6), 3, rand_color()));
+    world.append(Sphere(glm::vec3(3, 3, 6), 3, rand_color()));
+
+    world.append(Sphere(glm::vec3(2, 1, 1), 1, rand_color()));
+    // AABB sphere1 = AABB((1 - 1), (1+1), (1-1), (1+1));
+    // boundingBoxes.push_back(sphere1);
+    world.append(Sphere(glm::vec3(5, 6, 4), 2, rand_color()));
+    // AABB sphere2 = AABB((2 - 2), (2+2), (2-2), (2+2));
+    // boundingBoxes.push_back(sphere2);
+    world.append(Sphere(glm::vec3(7, 3, 6), 3, rand_color()));
+
+    world.append(Sphere(glm::vec3(-3, 6, 1), 1, rand_color()));
+    // // AABB sphere1 = AABB((1 - 1), (1+1), (1-1), (1+1));
+    // // boundingBoxes.push_back(sphere1);
+    world.append(Sphere(glm::vec3(-5, -6, 4), 2, rand_color()));
+    // // AABB sphere2 = AABB((2 - 2), (2+2), (2-2), (2+2));
+    // // boundingBoxes.push_back(sphere2);
+    // world.append(Sphere(glm::vec3(-7, 3, 6), 3, rand_color()));
     // AABB sphere3 = AABB((3 - 3), (3+3), (3-3), (3+3));
     // boundingBoxes.push_back(sphere3);
 
 
 
     //Bounding boxes around spheres for full box hierarchical bounding boxes
-    world.append(Sphere(glm::vec3(0, 0, 4), 4, rand_color()));
+    // world.append(Sphere(glm::vec3(0, 0, 4), 4, rand_color()));
     // AABB sphere1 = AABB((1 - 1), (1+1), (1-1), (1+1));
     // boundingBoxes2.push_back(sphere1);
     // world.append(Sphere(glm::vec3(2, 2, 4), 2, rand_color()));
@@ -240,17 +246,17 @@ int main(int argc, char** argv) {
     // AABB hardCode4 = AABB(480, 640, 0, 480);
     // boundingBoxes1.push_back(hardCode4);
 
-    // // and add some boxes and prep world for rendering
+    // and add some boxes and prep world for rendering
     // for (int i = 0 ; i < NUM_BOXES ; ++i) {
     //     std::vector<Triangle> cube = random_box();
-    //     for(auto t : cube){
-    //         float minX = getMin(t.getA().x, t.getB().x, t.getC().x);
-    //         float maxX = getMax(t.getA().x, t.getB().x, t.getC().x);
-    //         float minY = getMin(t.getA().y, t.getB().y, t.getC().y);
-    //         float maxY = getMax(t.getA().y, t.getB().y, t.getC().y);
-    //         AABB box = AABB(minX, maxX, minY, maxY);
-    //         boundingBoxes.push_back(box);
-    //     }
+    //     // for(auto t : cube){
+    //     //     float minX = getMin(t.getA().x, t.getB().x, t.getC().x);
+    //     //     float maxX = getMax(t.getA().x, t.getB().x, t.getC().x);
+    //     //     float minY = getMin(t.getA().y, t.getB().y, t.getC().y);
+    //     //     float maxY = getMax(t.getA().y, t.getB().y, t.getC().y);
+    //     //     AABB box = AABB(minX, maxX, minY, maxY);
+    //     //     boundingBoxes.push_back(box);
+    //     // }
 
     //     world.append(cube);
     // }
@@ -263,43 +269,74 @@ int main(int argc, char** argv) {
     world.lock();
 
     // create the intersector
-    BruteForceIntersector intersector;
+    BruteForceIntersector intersector1;
+    BruteForceIntersector intersector2;
+    BruteForceIntersector intersector3;
+    BruteForceIntersector intersector4;
+    BruteForceIntersector intersector5;
+    BruteForceIntersector intersector6;
+    BruteForceIntersector intersector7;
+    BruteForceIntersector intersector8;
 
     // MySlickIntersector intersector1;
+    Timer timer;
+    timer.start();
 
 
     // and setup the renderer
-    Renderer renderer(&intersector);
 
-    // render
-    Timer timer;
-    timer.start();
-    renderer.render(image, camera, lights, world);
-    renderer.render(image3, camera, lights, world);
-    timer.stop();
+    Renderer renderer1(&intersector1, image3, camera, lights, world, 1);
+    Renderer renderer2(&intersector2, image3, camera, lights, world, 2);
+    Renderer renderer3(&intersector3, image3, camera, lights, world, 3);
+    Renderer renderer4(&intersector4, image3, camera, lights, world, 4);
+
+    pthread_t t1;
+    pthread_t t2;
+    pthread_t t3;
+    pthread_t t4;
+
+    Renderer renderer5(&intersector5, image, camera, lights, world, 1);
+    Renderer renderer6(&intersector6, image, camera, lights, world, 2);
+    Renderer renderer7(&intersector7, image, camera, lights, world, 3);
+    Renderer renderer8(&intersector8, image, camera, lights, world, 4);
+    pthread_t t5;
+    pthread_t t6;
+    pthread_t t7;
+    pthread_t t8;
+
+    // create threads and render
+    
+
+    pthread_create(&t1, NULL, &Renderer::hello_helper, &renderer1);
+    pthread_create(&t2, NULL, &Renderer::hello_helper, &renderer2);
+    pthread_create(&t3, NULL, &Renderer::hello_helper, &renderer3);
+    pthread_create(&t4, NULL, &Renderer::hello_helper, &renderer4); 
+    pthread_create(&t5, NULL, &Renderer::hello_helper1, &renderer5);
+    pthread_create(&t6, NULL, &Renderer::hello_helper1, &renderer6);
+    pthread_create(&t7, NULL, &Renderer::hello_helper1, &renderer7);
+    pthread_create(&t8, NULL, &Renderer::hello_helper1, &renderer8);
+
+
+    std::cout << "Image1: " <<  std::endl;
+    // renderer.render(image3, camera, lights, world);
+    // pthread_t t;
+    // pthread_create(&t, NULL, &Renderer::hello_helper, &renderer);
+    
 
     // bitmap_image image("ray-traced.bmp");
 
-    image.save_image("ray-traced.bmp");
-    image3.save_image("non_aliased.bmp");
-
-    int image2i= 0;
+    // image.save_image("ray-traced.bmp");
+    
+    int image2i = 0;
     int image2j = 0;
-
     const unsigned int height = image.height();
-     const unsigned int width = image.width();
+    const unsigned int width = image.width();
 
     for(std::size_t i = 0; i < height - 2; i+=2){
         image2j = 0;
-        
         for(std::size_t j = 0; j < width - 2; j+=2){
-
-
-
-            // std::cout << "Image1: " << i << " : " << j <<  std::endl;
+            // 
             // std::cout << "Image2: " << image2i / 2 << " : " << image2j / 2 << std::endl;
-
-            
 
             rgb_t colour1;
             rgb_t colour2;
@@ -338,9 +375,10 @@ int main(int argc, char** argv) {
         image2i +=1;
     }
 
-
-
-    image2.save_image("ray_traced2.bmp");
+    timer.stop();
+    image.save_image("temp.bmp");
+    image3.save_image("non-aliased.bmp");
+    image2.save_image("anti-alias-image.bmp");
     std::cout << "Rendered in " <<  timer.total() << " milliseconds" << std::endl;
 }
 
