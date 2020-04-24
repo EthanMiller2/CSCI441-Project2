@@ -8,7 +8,6 @@
 #include "intersector.h"
 
 class Renderer {
-
     Intersector* _intersector;
 
     int clamp255(float v) {
@@ -68,29 +67,66 @@ class Renderer {
         const World& world,
         const Ray& ray
     ) {
-
         Hit hit = _intersector->find_first_intersection(world, ray);
         return shade(camera, lights, hit);
     }
 
 public:
+    int number; 
+    bitmap_image& imageG;
+    Camera& cameraG;
+    Lights& lightsG;
+    World& worldG;
 
-    Renderer(Intersector* intersector) : _intersector(intersector) { }
-
-    void render(
-        bitmap_image &image,
-        const Camera& camera,
-        const Lights& lights,
-        const World& world
-    ) {
-        for (int y = 0; y < image.height(); ++y) {
-            for (int x = 0; x < image.width(); ++x) {
-                Ray ray = camera.make_ray(image.width(), image.height(), x, y);
-                glm::vec3 c = render_pixel(camera, lights, world, ray);
-                image.set_pixel(x, image.height()-y-1, to_color(c));
+    void *render(void){   
+        if(number == 1){
+            for (int y = 0; y < imageG.height()/4; ++y) {
+                for (int x = 0; x < imageG.width(); ++x) {
+                    Ray ray = cameraG.make_ray(imageG.width(), imageG.height(), x, y);
+                    glm::vec3 c = render_pixel(cameraG, lightsG, worldG, ray);
+                    imageG.set_pixel(x, imageG.height()-y-1, to_color(c));
+                }
+            }
+        } else if(number == 2){
+            for (int y = imageG.height()/4; y < imageG.height()/4*2; ++y) {
+                for (int x = 0; x < imageG.width(); ++x) {
+                    Ray ray = cameraG.make_ray(imageG.width(), imageG.height(), x, y);
+                    glm::vec3 c = render_pixel(cameraG, lightsG, worldG, ray);
+                    imageG.set_pixel(x, imageG.height()-y-1, to_color(c));
+                }
+            }
+        } else if(number == 3){
+            for (int y = imageG.height()/4*2; y < imageG.height()/4*3; ++y) {
+                for (int x = 0; x < imageG.width(); ++x) {
+                     Ray ray = cameraG.make_ray(imageG.width(), imageG.height(), x, y);
+                    glm::vec3 c = render_pixel(cameraG, lightsG, worldG, ray);
+                    imageG.set_pixel(x, imageG.height()-y-1, to_color(c));
+                }
+            }
+        } else {
+            for (int y = imageG.height()/4*3; y < imageG.height(); ++y) {
+                for (int x = 0; x < imageG.width(); ++x) {
+                     Ray ray = cameraG.make_ray(imageG.width(), imageG.height(), x, y);
+                    glm::vec3 c = render_pixel(cameraG, lightsG, worldG, ray);
+                    imageG.set_pixel(x, imageG.height()-y-1, to_color(c));
+                }
             }
         }
+       
+        return 0;
     }
+
+    static void *r_helper(void *context){
+        return ((Renderer *)context)->render();
+    }
+
+    Renderer(
+        Intersector* intersector,  
+        bitmap_image& image,
+        Camera& camera,
+        Lights& lights,
+        World& world,
+        int num) : _intersector(intersector), imageG(image), cameraG(camera), lightsG(lights), worldG(world), number(num) { }
 };
 
 #endif
