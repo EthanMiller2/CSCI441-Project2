@@ -27,18 +27,18 @@ After running the executable there will be a print to the terminal displaying th
 # ray-traced.bmp
 ray-traced.bmp is an image file representing a large scale image of the image desired as output. This image is four times as large as the desired output. By making the image four times as large before rendering the desired output we can use "supersampling" to average each grouping of four pixels in the large scale image to assign a pixel to the desired size image. This technique blends colors on edges of surfaces and will smooth the edges of the shapes and objects in the desired image. Outputting this file is not essential to the rendering process, it is merely used to show an intermediate step between the non-aliased and anti-aliased image.
 
-![ray-tracedExample.png](proj2/img/ray-traced.bmp)
+![ray-traced.bmp](proj2/img/ray-traced.bmp)
 
 # non-aliased.bmp
 non-aliased.bmp is an image file representing the desired image before it is aliased. This image is just as large as the size of the desired image but the image is not aliased and if you look closely the edges of the spheres appear to be jagged, or sharp, not smooth. This file is not essential to the rendering process, it is merely used to as a valid comparison example to show the final product is indeed being anti-aliased.
 
-![non-aliasedExample.png](proj2/img/non-aliased.bmp)
+![non-aliased.bmp](proj2/img/non-aliased.bmp)
 
 # anti-alias-image.bmp
 
 anti-alias-image.bmp is the final image file after it has been anti-aliased and rendered. This image is the final representation of the desired output. Notice how in comparison to the non-aliased image the edges of the surfaces of the objects are way smoother!
 
-![anti-alias-imageExample.png](proj2/img/anti-alias-image.bmp)
+![anti-alias-image.bmp](proj2/img/anti-alias-image.bmp)
 
 
 
