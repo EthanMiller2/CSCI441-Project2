@@ -125,8 +125,7 @@ int main(int argc, char** argv) {
     Timer timer;
     timer.start();
 
-    image.save_image("ray-traced.bmp");
-    image3.save_image("non-aliased.bmp");
+    
     // Setup the renderers
     Renderer renderer1(&intersector1, image3, camera, lights, world, 1);
     Renderer renderer2(&intersector2, image3, camera, lights, world, 2);
@@ -217,7 +216,8 @@ int main(int argc, char** argv) {
     // End timer
     timer.stop();
 
-    // save temp image used for AA if you like
+    image.save_image("ray-traced.bmp");
+    image3.save_image("non-aliased.bmp");
 
     image2.save_image("anti-alias-image.bmp");
     std::cout << "Rendered in " <<  timer.total() << " milliseconds" << std::endl;
