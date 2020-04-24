@@ -46,5 +46,5 @@ anti-alias-image.bmp is the final image file after it has been anti-aliased and 
 * [Ethan Miller](https://github.com/EthanMiller2)
 * [Alexander Pelaez](https://github.com/AlexPelaez)
 
-# Licence
+# License
 [MIT](LICENSE)
