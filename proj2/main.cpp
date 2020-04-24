@@ -306,7 +306,6 @@ int main(int argc, char** argv) {
 
     // create threads and render
     
-
     pthread_create(&t1, NULL, &Renderer::hello_helper, &renderer1);
     pthread_create(&t2, NULL, &Renderer::hello_helper, &renderer2);
     pthread_create(&t3, NULL, &Renderer::hello_helper, &renderer3);
@@ -316,6 +315,14 @@ int main(int argc, char** argv) {
     pthread_create(&t7, NULL, &Renderer::hello_helper1, &renderer7);
     pthread_create(&t8, NULL, &Renderer::hello_helper1, &renderer8);
 
+    (void) pthread_join(t1, NULL);
+    (void) pthread_join(t2, NULL);
+    (void) pthread_join(t3, NULL);
+    (void) pthread_join(t4, NULL);
+    (void) pthread_join(t5, NULL);
+    (void) pthread_join(t6, NULL);
+    (void) pthread_join(t7, NULL);
+    (void) pthread_join(t8, NULL);
 
     std::cout << "Image1: " <<  std::endl;
     // renderer.render(image3, camera, lights, world);
