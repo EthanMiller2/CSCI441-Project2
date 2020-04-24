@@ -18,13 +18,13 @@ struct Camera {
 
     glm::vec3 background;
 
-    Camera(const glm::vec3& eye,
-            const glm::vec3& target,
-            const glm::vec3& up,
-            const glm::vec2& viewport_min,
-            const glm::vec2& viewport_max,
-            float viewport_dist,
-            const glm::vec3& background)
+    Camera(const glm::vec3& eye = glm::vec3(0, 0, -5),
+            const glm::vec3& target = glm::vec3(0, 0, 0),
+            const glm::vec3& up = glm::vec3(0, 1, 0),
+            const glm::vec2& viewport_min = glm::vec2(-5, -5),
+            const glm::vec2& viewport_max = glm::vec2(5, 5),
+            float viewport_dist = 5,
+            const glm::vec3& background = glm::vec3(.3, .6, .8))
         : pos(eye),
         viewport_min(viewport_min),
         viewport_max(viewport_max),
