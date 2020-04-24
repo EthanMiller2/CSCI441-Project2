@@ -24,21 +24,21 @@ This ray tracing application renders three different image files. This output is
 # Output
 After running the executable there will be a print to the terminal displaying the performancd of the ray tracer in milliseconds and 3 files will be produced under the build directory. The three files will be denoted as ray-traced.bmp, non-aliased.bmp, and anti-alias-image.bmp.
 
-#ray-traced.bmp
+# ray-traced.bmp
 ray-traced.bmp is an image file representing a large scale image of the image desired as output. This image is four times as large as the desired output. By making the image four times as large before rendering the desired output we are able to use "super sampling" to average each grouping of four pixels in the large scale image to assign a pixel to the desired size image. This technique blends colors on edges of surfaces and will smooth the edges of the shapes and objects in the desired image. This file is not essential to the rendering process, it is merely used to show an intermediate step between the non-aliased and anti-aliased image.
 
-![ray-tracedExample.png](ray-tracedExample.png)
+![ray-tracedExample.png](./img/ray-tracedExample.png)
 
-#non-aliased.bmp
+# non-aliased.bmp
 non-aliased.bmp is an image file representing a the desired image before it aliased. This image is just as large as the size of the desired image but the image is not aliased and if you look closely the edges of the spheres appear to be jagged, or sharp, not smooth. This file is not essential to the rendering process, it is merely used to as a valid comparison example to show the final product is indeed being anti-aliased. 
 
-![non-aliasedExample.png](non-aliasedExample.png)
+![non-aliasedExample.png](./img/non-aliasedExample.png)
 
-#anti-alias-image.bmp
+# anti-alias-image.bmp
 
 anti-alias-image.bmp is the final image file after it has been anti-aliased and rendered. This image is the final representation of the desired output. Notice how in comparison to the non-aliased image the edges of the surfaces of the objects are way smoother!
 
-![anti-alias-imageExample.png](anti-alias-imageExample.png)
+![anti-alias-imageExample.png](./img/anti-alias-imageExample.png)
 
 
 
